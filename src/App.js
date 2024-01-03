@@ -1,9 +1,22 @@
 import React from "react";
 
+import Header from "./Components/Header";
+import Footer from "./Components/Footer"
+import Note from "./Components/Note";
+
 export default function App() {
   return (
     <div>
-      <h1>Hello World!</h1>
+      <Header />
+      <section>
+        <Note />
+        <Note />
+        <Note />
+        <Note />
+        <Note />
+        <Note />
+      </section>
+      <Footer />
     </div>
   );
 }

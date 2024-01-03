@@ -42,4 +42,6 @@ footer p {
     border-radius: 7px;
     box-shadow: 0 2px 5px #cccccc;
     padding: 10px;
+    margin: 16px;
+    display: inline-block;
 }

@@ -7,7 +7,6 @@ import Note from "./Components/Note";
 import CreateArea from "./Components/CreateArea";
 
 axios.defaults.baseURL = 'http://127.0.0.1:4000/api/';
-axios.defaults.headers.common['Authorization'] = "Y3i33YWV1ok6QpjRKf5AcR6ujsTrO4IXISgt0tI6viWYubJvIb1s5lgXD1uiPdUj";
 axios.defaults.headers.common["Content-Type"] = 'content-Type';
 axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
 axios.defaults.headers.get['Content-Type'] = 'application/json';
@@ -27,7 +26,6 @@ export default function App() {
       url: url,
     }).then((response) => {
       const result = response.data;
-      console.log(result);
       setNoteList((prevValue) => {
         return result;
       });
@@ -36,51 +34,69 @@ export default function App() {
     });
   };
 
-  async function addNote2() {
+  async function addNote(note) {
     const url = '/addNote';
 
-    const formData = new FormData();
-    formData.append('id', 1234556)
-
-    await axios.post(url, formData).then((response) => {
-      const result = response.data;
-      console.log(result);
-    }).catch((response) => {
-      console.error("Failed to send request:", response);
-    });
-  }
-
-  function addNote(note) {
-    const { title, content} = note
+    const { title, content } = note
     const page = { id: noteList.length + 1, title: title, content: content, isDone: false }
 
-    setNoteList((prevValue) => {
-      return [
-        ...prevValue,
-        page
-      ];
-    });
+    const formData = new FormData();
+    formData.append('title', title)
+    formData.append('content', content)
+
+    try {
+      await axios.post(url, formData);
+      setNoteList((prevValue) => {
+        return [
+          ...prevValue,
+          page
+        ];
+      });
+    } catch (error) {
+      console.error('Failed to send request:', error);
+    }
+  }
+
+  async function discardNote(id, active) {
+    const url = '/discardNote';
+
+    const formData = new FormData();
+    formData.append('id', id)
+    formData.append('isActive', !active)
+
+    try {
+      await axios.post(url, formData);
+      setNoteList((prevValue) => {
+        return prevValue.filter((x) => {
+          return x._id !== id
+        });
+      });
+    } catch (error) {
+      console.error('Failed to send request:', error);
+    }
   };
 
-  function deleteNote(id) {
-    setNoteList((prevValue) => {
-      return prevValue.filter((x) => {
-        return x.id !== id
-      });
-    });
-  };
+  async function checkedNote(id, checked) {
+    const url = '/checkedNote';
 
-  function checkedNote(id) {
-    addNote2();
-    setNoteList((prevValue) => {
-      const updatedList = prevValue.map((x) => {
-        if (x.id === id) {
-          return { ...x, isDone: !x.isDone };
-        };
-        return x;
+    const formData = new FormData();
+    formData.append('id', id)
+    formData.append('isDone', !checked)
+
+    try {
+      await axios.post(url, formData);
+      setNoteList((prevValue) => {
+        const updatedList = prevValue.map((x) => {
+          if (x._id === id) {
+            return { ...x, isDone: !x.isDone };
+          };
+          return x;
+        });
+        return updatedList;
       });
-      return updatedList;
-    });
+    } catch (error) {
+      console.error('Failed to send request:', error);
+    }
   };
 
   return (
@@ -91,13 +107,14 @@ export default function App() {
       </section>
       <section>
         {noteList.map((note) => (
-          <Note
-            key={note.id}
-            id={note.id}
+          note.isActive && <Note
+            key={note._id}
+            id={note._id}
             title={note.title}
             content={note.content}
             checked={note.isDone}
-            onDelete={deleteNote}
+            active={note.isActive}
+            onDelete={discardNote}
             onChecked={checkedNote}
           />
         ))}

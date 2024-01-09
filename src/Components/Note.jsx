@@ -11,8 +11,8 @@ export default function Note(prop) {
         <h1>{prop.title}</h1>
         <p>{prop.content}</p>
       </div>
-      <button onClick={() => { prop.onDelete(prop.id) }}><DeleteIcon /></button>
-      <button onClick={() => { prop.onChecked(prop.id) }}>{prop.checked ? <CloseIcon /> : <CheckIcon /> }</button>
+      <button onClick={() => { prop.onDelete(prop.id, prop.active) }}><DeleteIcon /></button>
+      <button onClick={() => { prop.onChecked( prop.id, prop.checked) }}>{prop.checked ? <CloseIcon /> : <CheckIcon /> }</button>
     </div>
   );
 }

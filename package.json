@@ -17,10 +17,10 @@
     "web-vitals": "^3.5.1"
   },
   "scripts": {
-    "s": "react-scripts start",
-    "b": "react-scripts build",
-    "t": "react-scripts test",
-    "e": "react-scripts eject"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

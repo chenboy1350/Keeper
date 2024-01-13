@@ -38,7 +38,6 @@ export default function App() {
     const url = '/addNote';
 
     const { title, content } = note
-    const page = { id: noteList.length + 1, title: title, content: content, isDone: false }
 
     const formData = new FormData();
     formData.append('title', title)
@@ -46,12 +45,7 @@ export default function App() {
 
     try {
       await axios.post(url, formData);
-      setNoteList((prevValue) => {
-        return [
-          ...prevValue,
-          page
-        ];
-      });
+      getNote()
     } catch (error) {
       console.error('Failed to send request:', error);
     }
